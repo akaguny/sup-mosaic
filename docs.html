@@ -97,11 +97,11 @@ function resolve(base,href){const parts=base.split("/").slice(0,-1);for(const p 
 async function show(id){const d=Object.hasOwn(byId,id)?byId[id]:DOCS[0],el=document.getElementById("doc");
   document.querySelectorAll("nav .group a").forEach(a=>a.toggleAttribute("aria-current",a.dataset.id===d.id)&&a.setAttribute("aria-current","page"));
   try{const r=await fetch(d.file,{cache:"no-cache"});if(!r.ok)throw new Error(r.status);
-    el.innerHTML=DOMPurify.sanitize(marked.parse(await r.text()));
+    el.innerHTML=DOMPurify.sanitize(marked.parse(await r.text()),{FORBID_TAGS:["style","form","input","button","textarea","select"],FORBID_ATTR:["style"]});
     el.querySelectorAll("table").forEach(t=>{const w=document.createElement("div");w.className="tbl";t.replaceWith(w);w.append(t)});
     el.querySelectorAll("a[href]").forEach(a=>{const h=a.getAttribute("href");if(/^[a-z][a-z0-9+.-]*:/i.test(h)&&!/^(https?|mailto):/i.test(h)){a.removeAttribute("href");return}
-      if(/^https?:/.test(h)){a.target="_blank";a.rel="noopener";return}
-      const f=resolve(d.file,h.split("#")[0]);if(byFile[f])a.href="#"+byFile[f].id});
+      if(/^https?:/i.test(h)){a.target="_blank";a.rel="noopener";return}
+      const f=resolve(d.file,h.split("#")[0]);if(Object.hasOwn(byFile,f))a.href="#"+byFile[f].id});
     document.title=d.title+" · SUP-мозаика";window.scrollTo(0,0)}
   catch(e){el.innerHTML="";const p=document.createElement("p");p.className="err";p.textContent="Не удалось открыть "+d.file+". Обновите страницу.";el.append(p)}}
 window.addEventListener("hashchange",()=>show(location.hash.slice(1)));

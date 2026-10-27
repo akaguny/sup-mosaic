@@ -1,5 +1,5 @@
 // Дымовой тест SUP-мозаики в headless Chromium.
-// Запуск: python3 -m http.server 8765 -d <папка проекта> &  NODE_PATH=$(npm root -g) node tools/check.js http://localhost:8765/ [shot.png]
+// Запуск: python3 -m http.server 8765 --bind 127.0.0.1 -d <папка проекта> &  NODE_PATH=$(npm root -g) node tools/check.js http://localhost:8765/ [shot.png]
 // Ошибки загрузки Google Fonts и jsPDF с CDN в песочнице ожидаемы и не считаются.
 const {chromium}=require('playwright');
 (async()=>{

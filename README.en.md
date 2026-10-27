@@ -48,10 +48,17 @@ The app is a static site with no build step: any static file server works, e.g.
 ## Security notes
 
 - Third-party browser libraries are loaded from cdnjs **with Subresource Integrity** (`jsPDF 4.2.1`, `marked 18.1.1`, `DOMPurify 3.4.17`); the hashes are pinned in `index.html` and `docs.html`.
-- Markdown from `docs/*.md` is sanitized with DOMPurify before it reaches the DOM.
-- The app keeps its state in `localStorage` and validates every value it reads back.
+- Markdown from `docs/*.md` is sanitized with DOMPurify (with `style`, `form`, `input` forbidden) before it reaches the DOM, and links with unsafe schemes are stripped.
+- What the app reads back from `localStorage` is checked: draft and profile structure, settings ranges, board and colour ids, sheet and board counts; the palette and catalogue dictionaries have no prototype.
 - The Python tools under `tools/` parse untrusted PDFs and photos; run them in their own venv or container.
-- Known findings and accepted risks: [SECURITY-AUDIT.md](SECURITY-AUDIT.md).
+- Reports: [audit #1](SECURITY-AUDIT.md) (before the fixes), [audit #2](SECURITY-AUDIT-2.md) (after).
+
+Accepted risks:
+
+- No CSP: a meta policy would break the claude.ai artifact runtime, and GitHub Pages does not let static files set headers. The app handles no foreign data and sends none.
+- Google Fonts receives the visitor's IP and User-Agent. A fully local build would need the woff2 files in the repository.
+- All `*.github.io` project sites share one origin, so another Pages project of yours can read this app's `localStorage`. Only a custom domain (CNAME) removes that.
+- The libraries stay on a CDN (no local vendoring) — integrity rests on SRI.
 
 ## License
 
