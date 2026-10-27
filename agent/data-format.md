@@ -20,7 +20,7 @@
 | `kind` | `allround`, `touring`, `race`, `surf`, `yoga`, `fishing` — профиль носа и хвоста, длина брелока |
 | `sizes` | `[длина, ширина″]`; длина строкой `"12'6"`. У брелока `[]` |
 | `colors` | роли → код Artkal S (`"S103"`) или короткий ключ из `colors.json` (`"NB"`). `acc2` необязателен |
-| `colorsFrom` | `photo`, `keychain`, `photo?`, `approx` — см. [Цвета](colors.md); `colorsNote` — пояснение (например «фото сбоку») |
+| `colorsFrom` | `photo`, `keychain`, `photo?`, `approx` — см. [Цвета](../docs/colors.md); `colorsNote` — пояснение (например «фото сбоку») |
 | `style` | признаки типового трафарета через пробел (`band`, `band2`, `bungee`, `dots`, `spine`, `center`) или `art:<ключ>` — рисунок из `art.json` |
 | `year` | коллекция, для фильтра по годам |
 | `keychain` | модель брелока по фото того же бренда; без него приложение строит типовой брелок |

@@ -69,9 +69,7 @@ a:focus-visible{outline:2px solid var(--accent);outline-offset:2px}
       <span>Документация проекта</span>
     </div>
     <a class="back" href="index.html">← К приложению</a>
-    <div class="group" id="g-user"><h2>Пользователю</h2></div>
-    <div class="group" id="g-both"><h2>Каталог</h2></div>
-    <div class="group" id="g-agent"><h2>Агенту</h2></div>
+    <div class="group" id="g-user"><h2>Документация</h2></div>
   </nav>
   <main><article id="doc"><p class="err">Загружаю документ…</p></article></main>
 </div>
@@ -84,14 +82,7 @@ const DOCS=[
   {id:"readme",file:"README.md",title:"Обзор",group:"g-user"},
   {id:"user-guide",file:"docs/user-guide.md",title:"Руководство",group:"g-user"},
   {id:"keychains",file:"docs/keychains.md",title:"Правила брелока",group:"g-user"},
-  {id:"colors",file:"docs/colors.md",title:"Цвета",group:"g-both"},
-  {id:"status",file:"docs/status.md",title:"Статус каталога",group:"g-both"},
-  {id:"decisions",file:"docs/decisions.md",title:"Решения и вопросы",group:"g-both"},
-  {id:"changelog",file:"CHANGELOG.md",title:"История изменений",group:"g-both"},
-  {id:"agents",file:"AGENTS.md",title:"Начало сессии",group:"g-agent"},
-  {id:"workflow",file:"docs/workflow.md",title:"Порядок работы",group:"g-agent"},
-  {id:"data-format",file:"docs/data-format.md",title:"Форматы данных",group:"g-agent"},
-  {id:"architecture",file:"docs/architecture.md",title:"Устройство приложения",group:"g-agent"}];
+  {id:"colors",file:"docs/colors.md",title:"Цвета",group:"g-user"}];
 const byFile=Object.fromEntries(DOCS.map(d=>[d.file,d])),byId=Object.fromEntries(DOCS.map(d=>[d.id,d]));
 for(const d of DOCS){const a=document.createElement("a");a.href="#"+d.id;a.textContent=d.title;a.dataset.id=d.id;document.getElementById(d.group).append(a)}
 function resolve(base,href){const parts=base.split("/").slice(0,-1);for(const p of href.split("/")){if(p==="..")parts.pop();else if(p&&p!==".")parts.push(p)}return parts.join("/")}

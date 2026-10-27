@@ -18,19 +18,14 @@ Live app: https://akaguny.github.io/sup-mosaic/ · the documentation lives there
 
 ## Documents
 
-The documentation is Russian-only and shipped with the app (`docs.html`), the source files are in `docs/`.
+| Document | About |
+|---|---|
+| [Руководство](docs/user-guide.md) | how to build a sheet, change colours, print, assemble a keychain (Russian) |
+| [Правила брелока](docs/keychains.md) | width in inches, what to keep and what to drop, the ring (Russian) |
+| [Цвета](docs/colors.md) | how Artkal colours are picked, table by series (Russian) |
+| [CHANGELOG](CHANGELOG.md) | what changed per version (Russian) |
 
-| Document | For | About |
-|---|---|---|
-| [Руководство](docs/user-guide.md) | user | how to build a sheet, change colours, print, assemble a keychain |
-| [Правила брелока](docs/keychains.md) | both | width in inches, what to keep and what to drop, the ring |
-| [Цвета](docs/colors.md) | both | how Artkal colours are picked, table by series |
-| [Статус каталога](docs/status.md) | both | all 101 catalogue positions: what is done, what is missing |
-| [Решения и вопросы](docs/decisions.md) | both | decisions and open questions |
-| [Форматы данных](docs/data-format.md) | developer | `data/*.json`, grid symbols, board ids |
-| [Устройство приложения](docs/architecture.md) | developer | modules, loading, storage, printing |
-| [История изменений](CHANGELOG.md) | both | what changed per version |
-| [Аудит безопасности](SECURITY-AUDIT.md) | developer | security review (Russian) |
+The in-app documentation viewer (`docs.html`) shows exactly these documents. Working material for the agent that maintains the catalogue — status, data formats, architecture, workflow, security audits — lives in `agent/` (entry point [AGENTS.md](AGENTS.md)) and is deliberately kept out of the user documentation.
 
 ## Structure
 
@@ -39,7 +34,8 @@ index.html, styles.css, docs.html   app page, styles, documentation viewer
 js/                                 app modules (boot → palette → catalog → state → layout → draw → ui → app)
 data/                               palettes, board catalogue, photo-traced drawings, colour keys, renames
 tools/                              agent tools: photos from PDF, grid drafts, colours, review sheets, smoke test
-docs/                               documentation
+docs/                               user documentation
+agent/                              agent working documents (status, formats, architecture, audits)
 ```
 
 The app is a static site with no build step: any static file server works, e.g.
@@ -51,7 +47,6 @@ The app is a static site with no build step: any static file server works, e.g.
 - Markdown from `docs/*.md` is sanitized with DOMPurify (with `style`, `form`, `input` forbidden) before it reaches the DOM, and links with unsafe schemes are stripped.
 - What the app reads back from `localStorage` is checked: draft and profile structure, settings ranges, board and colour ids, sheet and board counts; the palette and catalogue dictionaries have no prototype.
 - The Python tools under `tools/` parse untrusted PDFs and photos; run them in their own venv or container.
-- Reports: [audit #1](SECURITY-AUDIT.md) (before the fixes), [audit #2](SECURITY-AUDIT-2.md) (after), [audit #3](SECURITY-AUDIT-3.md) (verification of the fixes).
 
 Accepted risks:
 
