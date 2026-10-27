@@ -26,11 +26,13 @@ function cleanCw(cw){if(!cw||typeof cw!=="object")return null;const r={};let n=0
   for(const k of ROLE_KEYS){const v=cw[k];if(typeof v==="string"&&own(PAL,v)){r[k]=v;n++}}return n?r:null}
 function cleanSheets(arr){return(Array.isArray(arr)?arr:[]).filter(sh=>sh&&Array.isArray(sh.items)).slice(0,MAX_SHEETS)
   .map(sh=>({items:sh.items.filter(it=>it&&typeof it.s==="string").slice(0,MAX_ITEMS).map(it=>{
-      const o={s:alias(it.s),c:numIn(it.c,0,120,0),r:numIn(it.r,-120,240,0),rot:numIn(it.rot,0,3,0)},cw=cleanCw(it.cw);
+      const o={s:alias(it.s),c:numIn(it.c,0,120,0),r:numIn(it.r,0,120,0),rot:numIn(it.rot,0,3,0)},cw=cleanCw(it.cw);
       if(cw)o.cw=cw;return o}).filter(it=>own(byId,it.s)),swap:cleanSwap(sh.swap)}))}
 function lsProfiles(){return lsArr("sup-mosaic-profiles")}
 async function loadProfiles(){if(db&&uid){try{const q=await db.collection("data/users/"+uid).get(),all=q.docs.map(d=>({id:d.id,...d.data()}));profiles=all.filter(p=>p.kind==="profile");colorways=all.filter(p=>p.kind==="colorway"&&p.roles)}catch(e){profiles=lsProfiles();colorways=lsCw();db=null}}else{profiles=lsProfiles();colorways=lsCw()}
-  profiles.sort((a,b)=>a.name.localeCompare(b.name));colorways.sort((a,b)=>a.name.localeCompare(b.name));renderProfiles();renderCw()}
+  profiles.sort((a,b)=>String(a.name).localeCompare(String(b.name)));
+  colorways=colorways.map(c=>(c&&typeof c.name==="string")?{...c,roles:cleanCw(c.roles)}:null).filter(c=>c&&c.roles);
+  colorways.sort((a,b)=>String(a.name).localeCompare(String(b.name)));renderProfiles();renderCw()}
 function renderProfiles(){const sel0=$("profSel");sel0.textContent="";const og=(l,items)=>{if(!items.length)return;const g=document.createElement("optgroup");g.label=l;items.forEach(([v,t])=>{const o=document.createElement("option");o.value=v;o.textContent=t;g.append(o)});sel0.append(g)};
   og("Мои профили",profiles.map(p=>[p.id,p.name]));og("Готовые",BUILTIN.map((p,i)=>["b"+i,p.name]));sel0.value=activeProfile;if(sel0.value!==activeProfile){activeProfile="b0";sel0.value="b0"}
   $("profDel").disabled=activeProfile.startsWith("b");
@@ -53,7 +55,8 @@ async function exportPdf(all){const name=all?"sup-mosaic-"+S.sheets.length+"-she
   try{const G=geom(),doc=new jspdf.jsPDF({unit:"mm",format:[G.W,G.H],orientation:G.W>G.H?"landscape":"portrait",compress:true}),pen=pdfPen(doc);
     const idx=all?S.sheets.map((_,i)=>i):[S.cur];idx.forEach((si,n)=>{if(n)doc.addPage([G.W,G.H],G.W>G.H?"landscape":"portrait");drawSheet(pen,si,false)});
     if(downloads)await downloads.save({filename:name,data:doc.output("blob")});
-    else doc.save(name); /* вне Claude — обычная загрузка браузера */
+    else if(!window.claude)doc.save(name); /* вне Claude — обычная загрузка браузера */
+    else throw new Error("сохранение недоступно в этом просмотре");
     toast("PDF готов: листов "+idx.length)}
   catch(e){toast(e&&e.code==="declined"?"Сохранение отменено":"PDF не сохранился: "+(e&&e.message||"ошибка"))}}
 $("pdfOne").onclick=()=>exportPdf(false);$("pdfAll").onclick=()=>exportPdf(true);
@@ -66,6 +69,6 @@ function start(){try{const d=JSON.parse(localStorage.getItem("sup-mosaic-draft-v
   S.cur=numIn(S.cur,0,Math.max(0,S.sheets.length-1),0);syncForm();renderBrands();renderLib();renderProfiles();render();
   window.addEventListener("resize",()=>render());if(document.fonts&&document.fonts.ready)document.fonts.ready.then(()=>render());
   const use=n=>window.claude&&window.claude.use?window.claude.use(n).catch(()=>null):Promise.resolve(null);
-  use("downloads").then(d=>{downloads=d;if(!d)$("pdfNote").textContent="PDF сохранится обычной загрузкой браузера. Печатайте в масштабе 100 %."});
+  use("downloads").then(d=>{downloads=d;if(!d&&!window.claude)$("pdfNote").textContent="PDF сохранится обычной загрузкой браузера. Печатайте в масштабе 100 %."});
   Promise.all([use("db"),use("user")]).then(async([d,u])=>{try{if(d&&u){uid=await u.id();db=uid?d:null}}catch(e){db=null}loadProfiles()})}
 start();
