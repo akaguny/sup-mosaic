@@ -1,0 +1,102 @@
+<!doctype html><html><head><meta charset=utf8><meta name=viewport content="width=device-width,initial-scale=1,viewport-fit=cover"><style>:root{color-scheme:light;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}html{scroll-padding-top:env(safe-area-inset-top,0px)}body{margin:0;padding:0;font:14px -apple-system,BlinkMacSystemFont,sans-serif;background:#fff;color:#000}img{max-width:100%}[hidden]:not([hidden=until-found i]){display:none!important}</style></head><body>
+<title>SUP-мозаика</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600;700&family=Unbounded:wght@600&family=JetBrains+Mono:wght@400;600&display=swap">
+<link rel="stylesheet" href="styles.css">
+
+<div class="wrap">
+  <header class="top">
+    <h1>SUP-мозаика</h1>
+    <div class="sub">Генератор трафаретов термомозаики: положите доски на поле, ячейки под бусины появятся на свободном месте листа.</div>
+    <a class="doclink" href="docs.html" target="_blank" rel="noopener">Документация</a>
+  </header>
+
+  <div id="replaceBanner" class="banner" hidden><span>Выберите в каталоге трафарет на замену</span><button id="replaceCancel">Отмена</button></div>
+
+  <div class="cols">
+    <section class="panel" aria-label="Каталог трафаретов">
+      <h2>Каталог · <span id="libCount"></span></h2>
+      <input type="search" id="q" placeholder="Поиск: модель или размер" aria-label="Поиск по каталогу">
+      <div class="chips" id="brands"></div>
+      <div class="chips" id="years" hidden></div>
+      <ul class="lib" id="lib"></ul>
+      <div class="note">Клик по трафарету кладёт его на текущий лист. Цвета сняты с фото карточек и подобраны в Artkal S; «≈ цвета» — фото нет или оно неполное.</div>
+    </section>
+
+    <section class="panel" aria-label="Лист">
+      <div class="pager">
+        <button class="ico" id="prev" aria-label="Предыдущий лист">←</button>
+        <span class="n" id="pageN"></span>
+        <button class="ico" id="next" aria-label="Следующий лист">→</button>
+        <button id="addSheet">+ Лист</button>
+        <button id="delSheet">Удалить лист</button>
+        <button id="onePer">Каталог: по одному на лист</button>
+        <button id="undo">Отменить</button>
+      </div>
+      <div class="stage"><canvas id="paper"></canvas></div>
+      <div id="sheetWarn" class="warn" hidden></div>
+      <div class="note">Мышью доски перетаскиваются по полю и встают на штырьки. На телефоне двигайте стрелками в списке справа.</div>
+    </section>
+
+    <div class="side">
+      <section class="panel">
+        <h2>Профиль печати</h2>
+        <label class="f">Сохранённые профили<select id="profSel"></select></label>
+        <div class="row"><input type="text" id="profName" placeholder="Название профиля" aria-label="Название профиля" style="flex:1 1 120px"><button id="profSave" class="pri">Сохранить</button><button id="profDel">Удалить</button></div>
+        <div class="note" id="profWhere"></div>
+        <div class="grid2">
+          <label class="f">Бумага<select id="paperSel"><option>A4</option><option>A3</option><option>Letter</option></select></label>
+          <label class="f">Ориентация<select id="orient"><option value="p">Книжная</option><option value="l">Альбомная</option></select></label>
+          <label class="f">Шаг бусин, мм<select id="pitch"><option value="5">5 — midi</option><option value="2.6">2,6 — mini</option><option value="10">10 — maxi</option></select></label>
+          <label class="f">Поля листа, мм<input type="number" id="margin" min="3" max="25" step="1"></label>
+          <label class="f">Поле, столбцов<input type="number" id="cols" min="9" max="120" step="1"></label>
+          <label class="f">Поле, рядов<input type="number" id="rows" min="9" max="120" step="1"></label>
+        </div>
+        <label class="f">Ячейки под бусины вне поля<select id="cells">
+          <option value="boxes">Квадраты под коробочки, по одному на цвет</option>
+          <option value="cells">Кружки, по одному на бусину</option>
+          <option value="none">Не рисовать</option></select></label>
+        <label class="f">Сторона коробочки, мм<input type="number" id="box" min="10" max="80" step="1"></label>
+        <div class="row"><label class="c"><input type="checkbox" id="letters">Буквы в бусинах</label><label class="c"><input type="checkbox" id="gridOn">Сетка поля</label><label class="c"><input type="checkbox" id="tint">Цвет в ячейках</label></div>
+      </section>
+
+      <section class="panel">
+        <h2>На этом листе</h2>
+        <div class="items" id="items"></div>
+      </section>
+
+      <section class="panel">
+        <h2>Расцветка доски</h2>
+        <div class="note" id="cwFor"></div>
+        <div class="row" id="cwRoles"></div>
+        <label class="f">Сохранённые расцветки<select id="cwSel"></select></label>
+        <div class="row"><button id="cwApply" class="pri">Применить к доске</button><button id="cwApplyAll">Ко всем доскам серии</button></div>
+        <div class="row"><input type="text" id="cwName" placeholder="Название, например Gladiator PRO 2024" aria-label="Название расцветки" style="flex:1 1 140px"><button id="cwSave">Сохранить</button><button id="cwDel">Удалить</button></div>
+        <div class="note">Расцветка — это четыре цвета: кант, дека, пэд и акцент. Сохраните свою для каждого года выпуска и переключайте одним действием.</div>
+      </section>
+
+      <section class="panel">
+        <h2>Цвета листа</h2>
+        <label class="f">Набор бусин<select id="palSel"></select></label>
+        <div class="note">Каталог подобран в Artkal S. Для другого набора каждому цвету берётся ближайший оттенок, его можно заменить вручную.</div>
+        <div class="legend" id="legend"></div>
+        <div class="picker" id="picker" hidden>
+          <div><b id="pkTitle"></b></div>
+          <div class="swatches" id="swatches"></div>
+          <div class="row"><label class="c"><input type="radio" name="scope" id="scSheet" checked>только этот лист</label><label class="c"><input type="radio" name="scope" id="scAll">все листы профиля</label></div>
+          <div class="row"><button id="pkReset">Вернуть исходный</button><button id="pkClose">Закрыть</button></div>
+        </div>
+      </section>
+
+      <section class="panel">
+        <h2>Файл для печати</h2>
+        <div class="row"><button class="pri" id="pdfOne">PDF: этот лист</button><button id="pdfAll">PDF: все листы</button></div>
+        <div class="note" id="pdfNote">Печатайте в масштабе 100 %. Внизу листа есть отрезок 50 мм для проверки линейкой. Подписи в PDF латиницей.</div>
+      </section>
+    </div>
+  </div>
+</div>
+<div id="toast" hidden></div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+<script src="js/boot.js"></script>
+</body></html>
