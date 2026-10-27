@@ -8,7 +8,7 @@ import math, sys, os, json
 import numpy as np
 from PIL import Image
 from scipy import ndimage
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 from artkit import load as load_data
 
 PROF = {'allround': [.30, .60, .72, .62], 'touring': [.42, .85, .68, .50], 'race': [.40, .95, .60, .50]}

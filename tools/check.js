@@ -6,7 +6,7 @@ const {chromium}=require('playwright');
   const url=process.argv[2]||'http://localhost:8765/',shot=process.argv[3]||'check.png';
   const b=await chromium.launch(),p=await b.newPage({viewport:{width:1500,height:1250}}),errs=[],warns=[];
   p.on('pageerror',e=>errs.push('pageerror: '+e.message));
-  p.on('console',m=>{const t=m.text()+(m.location().url||'');if(m.type()==='error'&&!/ERR_TUNNEL|fonts\.g|cdnjs|ERR_NAME|ERR_CONNECTION/.test(t))errs.push('console: '+m.text());if(m.type()==='warning')warns.push(m.text())});
+  p.on('console',m=>{const t=m.text()+(m.location().url||'');const sri=/integrity|Subresource Integrity|valid digest/i.test(t);if(m.type()==='error'&&(sri||!/ERR_TUNNEL|fonts\.g|cdnjs|ERR_NAME|ERR_CONNECTION/.test(t)))errs.push('console: '+m.text());if(m.type()==='warning')warns.push(m.text())});
   await p.goto(url);await p.waitForSelector('#lib li',{timeout:10000});
   const total=await p.$eval('#libCount',e=>e.textContent);
   // у каждой полноразмерной доски должен быть брелок

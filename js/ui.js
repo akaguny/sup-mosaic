@@ -69,7 +69,7 @@ $("cwSel").onchange=()=>{const c=colorways.find(x=>x.id===$("cwSel").value);$("c
 $("cwApply").onclick=()=>{const it=sheet().items[sel];if(!it)return;snap();const r=cwPicked();if(r)it.cw=r;else delete it.cw;render();toast("Расцветка применена к доске")};
 $("cwApplyAll").onclick=()=>{const it=sheet().items[sel];if(!it)return;snap();const key=seriesOf(byId[it.s]),r=cwPicked();let n=0;
   S.sheets.forEach(sh=>sh.items.forEach(x=>{if(seriesOf(byId[x.s])===key){if(r)x.cw={...r};else delete x.cw;n++}}));render();toast("Расцветка применена: досок "+n+" («"+key+"», все листы)")};
-function lsCw(){try{return JSON.parse(localStorage.getItem("sup-mosaic-colorways")||"[]")}catch(e){return[]}}
+function lsCw(){return lsArr("sup-mosaic-colorways")}
 $("cwSave").onclick=async()=>{const it=sheet().items[sel],name=$("cwName").value.trim();if(!it)return;if(!name){toast("Введите название расцветки");$("cwName").focus();return}
   const ex=colorways.find(c=>c.name===name),id=ex?ex.id:"c_"+Date.now().toString(36),rec={kind:"colorway",name,roles:{...rolesOf(it)},saved:new Date().toISOString()};
   try{if(db&&uid)await db.collection("data/users/"+uid).doc(id).set(rec);else{const l=lsCw().filter(c=>c.id!==id);l.push({id,...rec});localStorage.setItem("sup-mosaic-colorways",JSON.stringify(l))}

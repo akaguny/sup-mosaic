@@ -56,4 +56,5 @@ for(const e of DATA.catalog){if(!e.sizes||!e.sizes.length||e.keychain)continue;
 const CAT=Object.fromEntries(DATA.catalog.map(e=>[e.brand+"|"+e.model,e]));
 ST.forEach(s=>{if(s.key)return;const e=CAT[s.b+"|"+s.m];if(!e)return;
   const t=e.keychain?ST.find(x=>x.key&&x.b===s.b&&x.m===e.keychain):ST.find(x=>x.auto&&x.b===s.b&&x.full===s.m);if(t)s.keyId=t.id});
-const byId=Object.fromEntries(ST.map(s=>[s.id,s]));
+/* Словарь без прототипа: id вида "__proto__"/"constructor" не должны находить унаследованные свойства. */
+const byId=Object.assign(Object.create(null),Object.fromEntries(ST.map(s=>[s.id,s])));

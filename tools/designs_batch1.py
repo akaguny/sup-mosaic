@@ -3,7 +3,7 @@
 Проверка: python3 -I tools/designs_batch1.py печатает ключи и сетки."""
 # Ячейки: r кант, d дека, p пэд, a акцент, b акцент 2, o кольцо, . пусто
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 from artkit import AR9, TR9, RC9, AR11, base, put, fill, where, rows
 def inside(g,r,c): return 0<=r<len(g) and 0<=c<len(g[0]) and g[r][c] in 'dpab'
 def S(g): return '|'.join(rows(g))

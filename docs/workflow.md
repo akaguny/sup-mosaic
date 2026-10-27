@@ -20,7 +20,7 @@
 | Нарисовать сетку кодом | `tools/artkit.py`: `base`, `put`, `fill`, `where`, `V`, профили `AR9`, `TR9`, `RC9`, `AR11`, `RC5` |
 | Записать в данные | `add_keychain(...)` или скрипт пачки по образцу `tools/designs_batch2.py` (новые сетки, перекраски, ссылки `keychain`) |
 | Лист сверки | `tools/review.py лист.png ключ[@модель]=фото[:rot[:kit]] …` → пользователю через SendUserFile |
-| Проверка | `python3 -m http.server 8765 -d <папка> &` и `NODE_PATH=$(npm root -g) node tools/check.js http://localhost:8765/` — `errors: []` |
+| Проверка | `python3 -m http.server 8765 --bind 127.0.0.1 -d <папка> &` и `NODE_PATH=$(npm root -g) node tools/check.js http://localhost:8765/` — `errors: []` |
 
 `check.js` проверяет, что каталог загрузился, у каждой полноразмерной доски есть брелок, работают фильтры «Брелоки» и «По фото» и кнопка «Брелок».
 

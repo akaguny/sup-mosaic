@@ -3,7 +3,7 @@
 Запуск из корня проекта: python3 -I tools/designs_batch2.py — пишет art.json и catalog.json (идемпотентно: заменяет свои записи).
 Повторно не запускать после ручных правок этих сеток в art.json."""
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 from artkit import AR9, TR9, AR11, RC5, base, put, fill, where, rows, check, load, save_art, save_catalog
 
 AR7 = [3, 5] + [7] * 13 + [5, 3]                         # прогулочная 17×7 (детская 28″)

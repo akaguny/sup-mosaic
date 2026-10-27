@@ -6,7 +6,7 @@ rot=-90 для фото «нос влево», kit=1 для фото компл�
 """
 import sys, os
 from PIL import Image, ImageDraw, ImageFont
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 from artkit import load
 from photos import board
 

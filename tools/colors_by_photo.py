@@ -7,7 +7,7 @@ colorsFrom: "photo" — сняты с фото и выверены глазом;
 Запуск: python3 -I tools/colors_by_photo.py
 """
 import sys, os
-sys.path.insert(0, os.path.dirname(__file__))
+sys.path.append(os.path.dirname(__file__))
 from artkit import load, save_catalog
 
 # № выгрузки: (бренд, модель каталога, rail, deck, pad, acc, откуда, заметка)

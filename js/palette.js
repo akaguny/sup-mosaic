@@ -2,7 +2,7 @@
 /* Палитры бусин. Данные — data/palettes.json.
    PAL[id] = {name, hex, code, set, odd}; id — код Artkal S («S01») или «набор:код» («hama:H01»).
    conv(id) переводит цвет каталога (Artkal S) в выбранный набор по ближайшему цвету в Lab. */
-const PAL={},SETS=DATA.palettes.sets;
+const PAL=Object.create(null),SETS=DATA.palettes.sets;
 for(const[set,list]of Object.entries(DATA.palettes.colors))for(const[c,n,h]of list)
   PAL[set==="artkal"?c:set+":"+c]={name:n,hex:"#"+h,code:c,set,odd:set!=="artkal"&&(/Transparent|Translucent|Clear|Neon|Fluorescent|Glow|Pearl|Metallic/.test(n)||(set==="mard"&&c==="H1"))};
 function labOf(hex){let[r,g,b]=[1,3,5].map(i=>parseInt(hex.slice(i,i+2),16)/255).map(v=>v>.04045?Math.pow((v+.055)/1.055,2.4):v/12.92);
